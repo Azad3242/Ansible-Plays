@@ -1,0 +1,22 @@
+---
+- name: webserver Setup
+  hosts: webserver
+  become: yes
+  tasks:
+    - name: Install Httpd
+      ansible.builtin.yum:
+        name: httpd
+        state: present
+    - name: State Service
+      ansible.builtin.service:
+        name: httpd
+        state: started
+        enabled: yes
+- name: DBserver Setup
+  hosts: db01
+  become: yes
+  tasks:
+    - name: Install mariadb-server
+      ansible.builtin.yum:
+        name: mariadb-server
+        state: present

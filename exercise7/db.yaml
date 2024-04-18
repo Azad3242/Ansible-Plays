@@ -1,0 +1,58 @@
+---
+- name: DBserver Setup
+  hosts: db01
+  become: yes
+    # vars:
+    #dbname: electric
+    #dbuser: current
+    #dbpass: tesla
+
+  tasks:
+    - name: Display Database Name
+      debug:
+        msg: "The dbname is {{ dbname }}"
+
+    - name: Display Database User
+      debug:
+        var: dbuser
+
+    - name: Install mariadb-server
+      ansible.builtin.yum:
+        name: mariadb-server
+        state: present
+
+    - name: Install PyMySql
+      ansible.builtin.yum:
+        name: python3-PyMySQL
+        state: present
+
+    - name: Start Mariadb Service
+      ansible.builtin.service:
+        name: mariadb
+        state: started
+        enabled: yes
+
+    - name: Create A New Database
+      community.mysql.mysql_db:
+        name: "{{ dbname }}"
+        state: present
+        login_unix_socket: /var/lib/mysql/mysql.sock
+      register: dbout  # Note the indentation level here, it should align with the task's parameters
+
+    - name: Print database creation output
+      debug:
+        var: dbout
+
+    - name: Create database User
+      community.mysql.mysql_user:
+        name: "{{ dbuser }}"
+        password: "{{ dbpass }}"
+        priv: '*.*:ALL'  # Corrected the privilege syntax
+        state: present
+        login_unix_socket: /var/lib/mysql/mysql.sock
+      register: user_creation_output  # Register should be aligned like this
+
+    - name: Print user creation output
+      debug:
+        var: user_creation_output
+

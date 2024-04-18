@@ -1,0 +1,19 @@
+---
+- name: Provisioning Servers
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install Ntp Agent on CentOS
+      yum:
+        name: "{{ item }}"
+        state: present
+      loop:  # Ensure this is properly indented to be part of the task
+        - chrony  # NTP agent
+        - wget
+        - httpd
+        - vim
+        - curl
+        - zip
+        - unzip
+      when: ansible_distribution == "CentOS"  # Properly align and quote condition
+
