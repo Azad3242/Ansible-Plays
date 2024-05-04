@@ -1,0 +1,27 @@
+---
+- name: Install Apache2 and httpd
+  hosts: all
+  become: yes
+  gather_facts: yes
+
+  tasks:
+    - name: Update package lists on Ubuntu
+      apt:
+        update_cache: yes
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install Apache2 on ubuntu
+      apt:
+        name: apache2
+        state: present
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install Apache2
+      yum:
+        name: httpd
+        state: present
+      when: ansible_distribution == "CentOS"
+
+
+
+

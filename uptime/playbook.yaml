@@ -1,0 +1,14 @@
+---
+- name: check system uptime
+  hosts: all
+  gather_facts: no
+
+  tasks:
+    - name: Check server uptime
+      shell: uptime
+      register: uptime_output
+      ignore_errors: yes
+
+    - name: Display server uptime
+      debug:
+        msg: "{{ inventory_hostname }} uptime is {{ uptime_output.stdout }}"

@@ -1,0 +1,19 @@
+---
+- name: Update packages
+  hosts: all
+  become: yes
+  gather_facts: yes
+
+  tasks:
+    - name: Update package lists on Ubuntu
+      apt:
+        update_cache: yes
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Update package lists on CentOS
+      yum:
+        name: '*'
+        state: latest
+      when: ansible_distribution == "CentOS"
+
+
